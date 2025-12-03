@@ -19,37 +19,36 @@ export default function ResultsClient() {
 
   useEffect(() => {
     const raw = params.get("data");
-    if (raw) {
-      try {
-        setData(JSON.parse(raw));
-      } catch (err) {
-        console.error("Failed to parse results data:", raw);
-      }
-    }
+    if (raw) setData(JSON.parse(raw));
   }, [params]);
 
   if (!data) return <div style={{ padding: "40px" }}>Loading...</div>;
 
+  // Remap GPT 0–20 rating to -10 → 10 for graph
   const graphData = data?.graphData?.map((d) => ({
     x: d.x,
-    y: d.y - 10, // center graph at 10 = 0
+    y: d.y - 10, // 0 → -10, 10 → 0, 20 → 10
     raw: d.y,
   })) || [];
 
   return (
     <div style={{ padding: "40px", maxWidth: "900px", margin: "0 auto" }}>
+      {/* Page Title */}
       <h1 style={{ fontSize: "36px", fontWeight: "700", marginBottom: "20px" }}>
         Your Productivity Results
       </h1>
 
+      {/* Summary Score */}
       <div style={{ fontSize: "64px", fontWeight: "800", marginBottom: "20px" }}>
-        {data.summaryScore ?? 0}/100
+        {data.summaryScore}/100
       </div>
 
+      {/* Explanation */}
       <p style={{ fontSize: "18px", marginBottom: "40px", color: "#444" }}>
-        {data.explanation ?? ""}
+        {data.explanation}
       </p>
 
+      {/* Graph Container */}
       <div style={{
         width: "100%",
         height: "500px",
@@ -63,42 +62,39 @@ export default function ResultsClient() {
           Productivity Graph
         </h2>
 
-        {graphData.length > 0 ? (
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={graphData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="x" />
-              <YAxis
-                domain={[-10, 10]}
-                ticks={[-10, -5, 0, 5, 10]}
-                tickFormatter={(val) => val + 10}
-              />
-              <ReferenceLine y={0} stroke="#999" strokeDasharray="5 5" />
-              <Tooltip formatter={(val, name, info) => [info.payload.raw, "Productivity"]} />
-              <Line
-                type="monotone"
-                dataKey="y"
-                stroke="#2563eb"
-                strokeWidth={3}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        ) : (
-          <div>No graph data available</div>
-        )}
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={graphData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="x" />
+            <YAxis
+              domain={[-10, 10]}
+              ticks={[-10, -5, 0, 5, 10]}
+            />
+            <ReferenceLine y={0} stroke="#999" strokeDasharray="5 5" />
+            <Tooltip formatter={(val, name, info) => [info.payload.raw, "Productivity"]} />
+            <Line
+              type="monotone"
+              dataKey="y"
+              stroke="#2563eb"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
+      {/* Best/Worst Hour */}
       <div style={{
         background: "#f0f0f0",
         padding: "20px",
         borderRadius: "12px",
         marginBottom: "40px",
       }}>
-        <p><strong>Best Hour:</strong> {data.bestHour ?? "N/A"}</p>
-        <p><strong>Worst Hour:</strong> {data.worstHour ?? "N/A"}</p>
+        <p><strong>Best Hour:</strong> {data.bestHour}</p>
+        <p><strong>Worst Hour:</strong> {data.worstHour}</p>
       </div>
 
+      {/* Suggestions */}
       <div style={{
         background: "#e0f2ff",
         padding: "25px",
@@ -109,10 +105,11 @@ export default function ResultsClient() {
           Suggestions for Improvement
         </h2>
         <p style={{ fontSize: "18px", color: "#222" }}>
-          {data.suggestion ?? ""}
+          {data.suggestion}
         </p>
       </div>
 
+      {/* Rate Another Day Button */}
       <button
         onClick={() => (window.location.href = "/")}
         style={{
