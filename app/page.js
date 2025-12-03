@@ -7,10 +7,8 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
-  // New time picker format
   const [wakeHour, setWakeHour] = useState(7);
   const [wakeMeridiem, setWakeMeridiem] = useState("AM");
-
   const [sleepHour, setSleepHour] = useState(10);
   const [sleepMeridiem, setSleepMeridiem] = useState("PM");
 
@@ -43,10 +41,7 @@ export default function Home() {
   }
 
   async function handleRate() {
-    const routine = hours.map((h) => ({
-      hour: h.hour,
-      action: h.value,
-    }));
+    const routine = hours.map((h) => ({ hour: h.hour, action: h.value }));
 
     const res = await fetch("/api/rate", {
       method: "POST",
@@ -63,64 +58,66 @@ export default function Home() {
   }
 
   return (
-    <div className="p-10 max-w-3xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">Rate My Routine</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+      <div className="bg-white shadow-lg rounded-2xl p-10 w-full max-w-2xl border border-gray-200">
+        <h1 className="text-4xl font-bold text-center mb-8">Rate My Routine</h1>
 
-      <div className="space-y-4">
-        <TimeDropdown
-          label="Wake Time"
-          hour={wakeHour}
-          setHour={setWakeHour}
-          meridiem={wakeMeridiem}
-          setMeridiem={setWakeMeridiem}
-        />
-
-        <TimeDropdown
-          label="Sleep Time"
-          hour={sleepHour}
-          setHour={setSleepHour}
-          meridiem={sleepMeridiem}
-          setMeridiem={setSleepMeridiem}
-        />
-
-        <button
-          onClick={generateHours}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
-        >
-          Generate Hours
-        </button>
-      </div>
-
-      <div className="mt-8 space-y-3">
-        {hours.map((h, i) => (
-          <HourInputRow
-            key={i}
-            hour={h.hour}
-            value={h.value}
-            onChange={(v) => {
-              const newHours = [...hours];
-              newHours[i].value = v;
-              setHours(newHours);
-            }}
-            onCopy={() => {
-              if (i > 0) {
-                const newHours = [...hours];
-                newHours[i].value = newHours[i - 1].value;
-                setHours(newHours);
-              }
-            }}
+        <div className="space-y-4">
+          <TimeDropdown
+            label="Wake Time"
+            hour={wakeHour}
+            setHour={setWakeHour}
+            meridiem={wakeMeridiem}
+            setMeridiem={setWakeMeridiem}
           />
-        ))}
-      </div>
 
-      {hours.length > 0 && (
-        <button
-          onClick={handleRate}
-          className="mt-8 px-4 py-2 bg-green-600 text-white rounded"
-        >
-          Rate My Day
-        </button>
-      )}
+          <TimeDropdown
+            label="Sleep Time"
+            hour={sleepHour}
+            setHour={setSleepHour}
+            meridiem={sleepMeridiem}
+            setMeridiem={setSleepMeridiem}
+          />
+
+          <button
+            onClick={generateHours}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg w-full hover:bg-blue-700 transition"
+          >
+            Generate Hours
+          </button>
+        </div>
+
+        <div className="mt-8 space-y-3 max-h-96 overflow-y-auto pr-2">
+          {hours.map((h, i) => (
+            <HourInputRow
+              key={i}
+              hour={h.hour}
+              value={h.value}
+              onChange={(v) => {
+                const newHours = [...hours];
+                newHours[i].value = v;
+                setHours(newHours);
+              }}
+              onCopy={() => {
+                if (i > 0) {
+                  const newHours = [...hours];
+                  newHours[i].value = newHours[i - 1].value;
+                  setHours(newHours);
+                }
+              }}
+            />
+          ))}
+        </div>
+
+        {hours.length > 0 && (
+          <button
+            onClick={handleRate}
+            className="mt-8 px-4 py-2 bg-green-600 text-white rounded-lg w-full hover:bg-green-700 transition"
+          >
+            Rate My Day
+          </button>
+        )}
+      </div>
     </div>
   );
 }
