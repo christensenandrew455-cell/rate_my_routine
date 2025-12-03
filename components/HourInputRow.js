@@ -14,7 +14,7 @@ export default function HourInputRow({ hour, value, onChange, onCopy }) {
         onClick={onCopy}
         className="px-3 py-1 bg-gray-200 rounded text-sm"
       >
-        Copy
+        Copy last input
       </button>
     </div>
   );
