@@ -2,7 +2,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
 import {
   LineChart,
   Line,
@@ -20,45 +19,37 @@ export default function ResultsClient() {
 
   useEffect(() => {
     const raw = params.get("data");
-    if (raw) setData(JSON.parse(raw));
+    if (raw) {
+      try {
+        setData(JSON.parse(raw));
+      } catch (err) {
+        console.error("Failed to parse results data:", raw);
+      }
+    }
   }, [params]);
 
   if (!data) return <div style={{ padding: "40px" }}>Loading...</div>;
 
-  // Prepare graph data
-  const graphData = data.graphData.map((d) => ({
+  const graphData = data?.graphData?.map((d) => ({
     x: d.x,
     y: d.y - 10, // center graph at 10 = 0
     raw: d.y,
-  }));
+  })) || [];
 
   return (
     <div style={{ padding: "40px", maxWidth: "900px", margin: "0 auto" }}>
-
-      {/* Page Title */}
       <h1 style={{ fontSize: "36px", fontWeight: "700", marginBottom: "20px" }}>
         Your Productivity Results
       </h1>
 
-      {/* Summary Score */}
-      <div style={{
-        fontSize: "64px",
-        fontWeight: "800",
-        marginBottom: "20px",
-      }}>
-        {data.summaryScore}/100
+      <div style={{ fontSize: "64px", fontWeight: "800", marginBottom: "20px" }}>
+        {data.summaryScore ?? 0}/100
       </div>
 
-      {/* Explanation */}
-      <p style={{
-        fontSize: "18px",
-        marginBottom: "40px",
-        color: "#444",
-      }}>
-        {data.explanation}
+      <p style={{ fontSize: "18px", marginBottom: "40px", color: "#444" }}>
+        {data.explanation ?? ""}
       </p>
 
-      {/* Graph Container */}
       <div style={{
         width: "100%",
         height: "500px",
@@ -72,40 +63,42 @@ export default function ResultsClient() {
           Productivity Graph
         </h2>
 
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={graphData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="x" />
-            <YAxis
-              domain={[-10, 10]}
-              ticks={[-10, -5, 0, 5, 10]}
-              tickFormatter={(val) => val + 10}
-            />
-            <ReferenceLine y={0} stroke="#999" strokeDasharray="5 5" />
-            <Tooltip formatter={(val, name, info) => [info.payload.raw, "Productivity"]} />
-            <Line
-              type="monotone"
-              dataKey="y"
-              stroke="#2563eb"
-              strokeWidth={3}
-              dot={{ r: 4 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        {graphData.length > 0 ? (
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={graphData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="x" />
+              <YAxis
+                domain={[-10, 10]}
+                ticks={[-10, -5, 0, 5, 10]}
+                tickFormatter={(val) => val + 10}
+              />
+              <ReferenceLine y={0} stroke="#999" strokeDasharray="5 5" />
+              <Tooltip formatter={(val, name, info) => [info.payload.raw, "Productivity"]} />
+              <Line
+                type="monotone"
+                dataKey="y"
+                stroke="#2563eb"
+                strokeWidth={3}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        ) : (
+          <div>No graph data available</div>
+        )}
       </div>
 
-      {/* Best/Worst Hour */}
       <div style={{
         background: "#f0f0f0",
         padding: "20px",
         borderRadius: "12px",
         marginBottom: "40px",
       }}>
-        <p><strong>Best Hour:</strong> {data.bestHour}</p>
-        <p><strong>Worst Hour:</strong> {data.worstHour}</p>
+        <p><strong>Best Hour:</strong> {data.bestHour ?? "N/A"}</p>
+        <p><strong>Worst Hour:</strong> {data.worstHour ?? "N/A"}</p>
       </div>
 
-      {/* Suggestions */}
       <div style={{
         background: "#e0f2ff",
         padding: "25px",
@@ -116,11 +109,10 @@ export default function ResultsClient() {
           Suggestions for Improvement
         </h2>
         <p style={{ fontSize: "18px", color: "#222" }}>
-          {data.suggestion}
+          {data.suggestion ?? ""}
         </p>
       </div>
 
-      {/* Rate Another Day Button */}
       <button
         onClick={() => (window.location.href = "/")}
         style={{
@@ -136,7 +128,6 @@ export default function ResultsClient() {
       >
         Rate Another Day
       </button>
-
     </div>
   );
 }
