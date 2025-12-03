@@ -1,17 +1,27 @@
 export default function TimeDropdown({ label, hour, setHour, meridiem, setMeridiem }) {
   return (
-    <div className="flex gap-3 items-center">
-      <div className="flex-1">
-        <label className="block mb-1 font-medium">{label}</label>
-        <div className="flex gap-2">
+    <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+      <div style={{ flex: 1 }}>
+        <label style={{ display: "block", marginBottom: "6px", fontWeight: "600" }}>
+          {label}
+        </label>
+
+        <div style={{ display: "flex", gap: "10px" }}>
           {/* Hour dropdown */}
           <select
             value={hour}
             onChange={(e) => setHour(e.target.value)}
-            className="border p-2 rounded w-24"
+            style={{
+              border: "1px solid #ccc",
+              padding: "8px",
+              borderRadius: "6px",
+              width: "70px",
+            }}
           >
             {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>{n}</option>
+              <option key={n} value={n}>
+                {n}
+              </option>
             ))}
           </select>
 
@@ -19,7 +29,12 @@ export default function TimeDropdown({ label, hour, setHour, meridiem, setMeridi
           <select
             value={meridiem}
             onChange={(e) => setMeridiem(e.target.value)}
-            className="border p-2 rounded w-20"
+            style={{
+              border: "1px solid #ccc",
+              padding: "8px",
+              borderRadius: "6px",
+              width: "70px",
+            }}
           >
             <option>AM</option>
             <option>PM</option>
