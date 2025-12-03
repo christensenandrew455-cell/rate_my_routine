@@ -1,10 +1,15 @@
 export default function HourInputRow({ hour, value, onChange, onCopy }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-32">{hour}</span>
+    <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+      <span style={{ width: "120px" }}>{hour}</span>
 
       <input
-        className="flex-1 border p-2 rounded"
+        style={{
+          flex: 1,
+          border: "1px solid #ccc",
+          padding: "8px",
+          borderRadius: "6px",
+        }}
         placeholder="Type a verb: study, gym, work..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -12,7 +17,14 @@ export default function HourInputRow({ hour, value, onChange, onCopy }) {
 
       <button
         onClick={onCopy}
-        className="px-3 py-1 bg-gray-200 rounded text-sm"
+        style={{
+          padding: "6px 12px",
+          background: "#e5e5e5",
+          borderRadius: "6px",
+          fontSize: "14px",
+          border: "none",
+          cursor: "pointer",
+        }}
       >
         Copy last input
       </button>
