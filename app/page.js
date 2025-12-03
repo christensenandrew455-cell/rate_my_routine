@@ -58,7 +58,7 @@ export default function Home() {
   }
 
   return (
-    <div style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
+    <div style={{ padding: "40px", maxWidth: "700px", margin: "0 auto" }}>
 
       {/* Hero Section */}
       <div style={{
@@ -72,26 +72,22 @@ export default function Home() {
           Rate My Routine
         </h1>
 
-        {/* Wake + Sleep Side by Side */}
-        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
-          <div style={{ flex: 1 }}>
-            <TimeDropdown
-              label="Wake Time"
-              hour={wakeHour}
-              setHour={setWakeHour}
-              meridiem={wakeMeridiem}
-              setMeridiem={setWakeMeridiem}
-            />
-          </div>
-          <div style={{ flex: 1 }}>
-            <TimeDropdown
-              label="Sleep Time"
-              hour={sleepHour}
-              setHour={setSleepHour}
-              meridiem={sleepMeridiem}
-              setMeridiem={setSleepMeridiem}
-            />
-          </div>
+        {/* Wake + Sleep Side by Side (centered & closer) */}
+        <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "20px" }}>
+          <TimeDropdown
+            label="Wake Time"
+            hour={wakeHour}
+            setHour={setWakeHour}
+            meridiem={wakeMeridiem}
+            setMeridiem={setWakeMeridiem}
+          />
+          <TimeDropdown
+            label="Sleep Time"
+            hour={sleepHour}
+            setHour={setSleepHour}
+            meridiem={sleepMeridiem}
+            setMeridiem={setSleepMeridiem}
+          />
         </div>
 
         <button
@@ -155,7 +151,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* App Description (NEW) */}
+      {/* App Description */}
       <div style={{
         background: "#fff",
         borderRadius: "12px",
@@ -164,7 +160,7 @@ export default function Home() {
         marginBottom: "40px",
       }}>
         <p style={{ fontSize: "18px", color: "#444", lineHeight: "1.6" }}>
-          “Rate My Routine” is your personal productivity companion. Whether you want a fun way to check your day, a serious tool to optimize your habits, or just curiosity about your productivity, this app helps you understand each hour of your day. Receive scores, visual graphs, and suggestions to improve your routine and make the most out of every day.
+          “Rate My Routine” is your personal productivity companion. Whether for fun, serious tracking, or just curiosity, this app evaluates each hour of your day, gives you scores, visual graphs, and suggestions to make the most of every day.
         </p>
       </div>
 
@@ -191,7 +187,7 @@ export default function Home() {
           </div>
           <div>
             <strong>How does it work?</strong>
-            <p>Simply enter your wake time, bedtime, and daily activities. The AI evaluates each hour and gives you a productivity score along with suggestions.</p>
+            <p>Enter your wake time, bedtime, and daily activities. The AI evaluates each hour and gives you a productivity score along with suggestions.</p>
           </div>
           <div>
             <strong>Should I take my results seriously?</strong>
