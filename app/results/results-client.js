@@ -23,95 +23,120 @@ export default function ResultsClient() {
     if (raw) setData(JSON.parse(raw));
   }, [params]);
 
-  if (!data) return <div className="p-10">Loading...</div>;
+  if (!data) return <div style={{ padding: "40px" }}>Loading...</div>;
 
-  // Convert to graph format:
-  // x = hour, y = rating - 10  (center graph at 0)
+  // Prepare graph data
   const graphData = data.graphData.map((d) => ({
     x: d.x,
-    y: d.y - 10, // 10 becomes 0 on graph
+    y: d.y - 10, // center graph at 10 = 0
     raw: d.y,
   }));
 
   return (
-    <div className="p-10 max-w-4xl mx-auto">
+    <div style={{ padding: "40px", maxWidth: "900px", margin: "0 auto" }}>
 
-      <h1 className="text-4xl font-bold mb-4">Your Productivity Results</h1>
+      {/* Page Title */}
+      <h1 style={{ fontSize: "36px", fontWeight: "700", marginBottom: "20px" }}>
+        Your Productivity Results
+      </h1>
 
-      {/* Overall score */}
-      <div className="text-6xl font-extrabold mb-3">
+      {/* Summary Score */}
+      <div style={{
+        fontSize: "64px",
+        fontWeight: "800",
+        marginBottom: "20px",
+      }}>
         {data.summaryScore}/100
       </div>
 
       {/* Explanation */}
-      <p className="text-lg mb-8 text-gray-700">
+      <p style={{
+        fontSize: "18px",
+        marginBottom: "40px",
+        color: "#444",
+      }}>
         {data.explanation}
       </p>
 
-      {/* Graph */}
-      <div className="bg-white border rounded-xl shadow p-6 mb-10">
-        <h2 className="text-2xl font-semibold mb-4">
+      {/* Graph Container */}
+      <div style={{
+        width: "100%",
+        height: "500px",
+        background: "#fff",
+        borderRadius: "12px",
+        padding: "20px",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+        marginBottom: "40px",
+      }}>
+        <h2 style={{ fontSize: "24px", fontWeight: "600", marginBottom: "12px" }}>
           Productivity Graph
         </h2>
 
-        <div style={{ width: "100%", height: "500px" }}>
-          <ResponsiveContainer>
-            <LineChart data={graphData}>
-
-              <CartesianGrid strokeDasharray="3 3" />
-
-              {/* X Axis (hours) */}
-              <XAxis dataKey="x" />
-
-              {/* Y Axis: -10 → 10 (center at 0 = neutral) */}
-              <YAxis
-                domain={[-10, 10]}
-                ticks={[-10, -5, 0, 5, 10]}
-                tickFormatter={(val) => val + 10}
-              />
-
-              {/* Neutral Line */}
-              <ReferenceLine y={0} stroke="gray" strokeDasharray="5 5" />
-
-              <Tooltip
-                formatter={(val, name, info) => [
-                  info.payload.raw, // show original score
-                  "Productivity",
-                ]}
-              />
-
-              {/* Smooth curve line */}
-              <Line
-                type="monotone"
-                dataKey="y"
-                stroke="blue"
-                strokeWidth={3}
-                dot={{ r: 4 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={graphData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="x" />
+            <YAxis
+              domain={[-10, 10]}
+              ticks={[-10, -5, 0, 5, 10]}
+              tickFormatter={(val) => val + 10}
+            />
+            <ReferenceLine y={0} stroke="#999" strokeDasharray="5 5" />
+            <Tooltip formatter={(val, name, info) => [info.payload.raw, "Productivity"]} />
+            <Line
+              type="monotone"
+              dataKey="y"
+              stroke="#2563eb"
+              strokeWidth={3}
+              dot={{ r: 4 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
 
-      {/* Best / Worst Hour */}
-      <div className="bg-gray-100 p-4 rounded-lg mb-10">
+      {/* Best/Worst Hour */}
+      <div style={{
+        background: "#f0f0f0",
+        padding: "20px",
+        borderRadius: "12px",
+        marginBottom: "40px",
+      }}>
         <p><strong>Best Hour:</strong> {data.bestHour}</p>
         <p><strong>Worst Hour:</strong> {data.worstHour}</p>
       </div>
 
-      {/* Suggestion section */}
-      <div className="bg-blue-50 p-6 rounded-xl shadow mb-10">
-        <h2 className="text-2xl font-bold mb-3">Suggestions for Improvement</h2>
-        <p className="text-lg text-gray-800">{data.suggestion}</p>
+      {/* Suggestions */}
+      <div style={{
+        background: "#e0f2ff",
+        padding: "25px",
+        borderRadius: "12px",
+        marginBottom: "40px",
+      }}>
+        <h2 style={{ fontSize: "22px", fontWeight: "700", marginBottom: "12px" }}>
+          Suggestions for Improvement
+        </h2>
+        <p style={{ fontSize: "18px", color: "#222" }}>
+          {data.suggestion}
+        </p>
       </div>
 
-      {/* Button */}
+      {/* Rate Another Day Button */}
       <button
         onClick={() => (window.location.href = "/")}
-        className="mt-6 px-5 py-3 bg-blue-600 text-white rounded-lg text-lg"
+        style={{
+          padding: "14px 24px",
+          fontSize: "18px",
+          fontWeight: "600",
+          color: "#fff",
+          background: "#2563eb",
+          border: "none",
+          borderRadius: "10px",
+          cursor: "pointer",
+        }}
       >
         Rate Another Day
       </button>
+
     </div>
   );
 }
