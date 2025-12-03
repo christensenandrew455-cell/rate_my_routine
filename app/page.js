@@ -7,13 +7,10 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
-  // Time state
   const [wakeHour, setWakeHour] = useState(7);
   const [wakeMeridiem, setWakeMeridiem] = useState("AM");
-
   const [sleepHour, setSleepHour] = useState(10);
   const [sleepMeridiem, setSleepMeridiem] = useState("PM");
-
   const [hours, setHours] = useState([]);
 
   const to24 = (hour, mer) => {
@@ -35,14 +32,11 @@ export default function Home() {
 
     let result = [];
     let current = start;
-
     result.push({ hour: display12(current), value: "" });
-
     while (current !== end) {
       current = (current + 1) % 24;
       result.push({ hour: display12(current), value: "" });
     }
-
     setHours(result);
   }
 
@@ -65,8 +59,8 @@ export default function Home() {
 
   return (
     <div style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
-      
-      {/* Hero Box */}
+
+      {/* Hero Section */}
       <div style={{
         background: "#fff",
         borderRadius: "12px",
@@ -77,11 +71,6 @@ export default function Home() {
         <h1 style={{ fontSize: "36px", fontWeight: "700", textAlign: "center", marginBottom: "20px" }}>
           Rate My Routine
         </h1>
-
-        {/* App Description */}
-        <p style={{ fontSize: "18px", color: "#444", marginBottom: "30px", lineHeight: "1.6" }}>
-          “Rate My Routine” is your personal productivity companion. Whether you’re looking for a fun way to see how your day measures up, a serious tool to optimize your daily habits, or just curious about how productive your routine really is, this app has you covered. Enter your wake time, bedtime, and hourly activities, and let our smart AI evaluate each hour, giving you a detailed productivity score, visual insights, and actionable suggestions to help you make the most of your day.
-        </p>
 
         {/* Wake + Sleep Side by Side */}
         <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
@@ -164,6 +153,19 @@ export default function Home() {
             Rate My Day
           </button>
         )}
+      </div>
+
+      {/* App Description (NEW) */}
+      <div style={{
+        background: "#fff",
+        borderRadius: "12px",
+        padding: "30px",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+        marginBottom: "40px",
+      }}>
+        <p style={{ fontSize: "18px", color: "#444", lineHeight: "1.6" }}>
+          “Rate My Routine” is your personal productivity companion. Whether you want a fun way to check your day, a serious tool to optimize your habits, or just curiosity about your productivity, this app helps you understand each hour of your day. Receive scores, visual graphs, and suggestions to improve your routine and make the most out of every day.
+        </p>
       </div>
 
       {/* FAQ Section */}
