@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
-  // Wake/sleep state
+  // Time state
   const [wakeHour, setWakeHour] = useState(7);
   const [wakeMeridiem, setWakeMeridiem] = useState("AM");
 
@@ -16,37 +16,37 @@ export default function Home() {
 
   const [hours, setHours] = useState([]);
 
-  // Convert to 24-hour format
+  // Convert 12hr -> 24hr
   const to24 = (hour, mer) => {
-    hour = Number(hour);
-    if (mer === "PM" && hour !== 12) hour += 12;
-    if (mer === "AM" && hour === 12) hour = 0;
-    return hour;
+    let h = Number(hour);
+    if (mer === "PM" && h !== 12) h += 12;
+    if (mer === "AM" && h === 12) h = 0;
+    return h;
   };
 
-  // Convert back to display format
+  // Convert 24hr -> 12hr display
   const display12 = (h24) => {
-    const h = h24 % 12 || 12;
-    const mer = h24 < 12 ? "AM" : "PM";
+    const h = h24 % 12 === 0 ? 12 : h24 % 12;
+    const mer = h24 < 12 || h24 === 24 ? "AM" : "PM";
     return `${h}:00 ${mer}`;
   };
 
-  // FIXED — handles crossing midnight properly
+  // FIXED hour generator
   function generateHours() {
     let start = to24(wakeHour, wakeMeridiem);
     let end = to24(sleepHour, sleepMeridiem);
 
-    let list = [];
+    let result = [];
     let current = start;
 
-    list.push({ hour: display12(current), value: "" });
+    result.push({ hour: display12(current), value: "" });
 
     while (current !== end) {
-      current = (current + 1) % 24; // wraps after midnight
-      list.push({ hour: display12(current), value: "" });
+      current = (current + 1) % 24;
+      result.push({ hour: display12(current), value: "" });
     }
 
-    setHours(list);
+    setHours(result);
   }
 
   async function handleRate() {
@@ -72,96 +72,108 @@ export default function Home() {
   return (
     <div
       style={{
-        minHeight: "100vh",
-        background: "#f5f5f5",
+        padding: "40px",
         display: "flex",
         justifyContent: "center",
-        paddingTop: "50px",
       }}
     >
-      {/* Center Card */}
       <div
         style={{
           width: "100%",
           maxWidth: "600px",
           background: "white",
-          borderRadius: "12px",
           padding: "30px",
-          boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
+          borderRadius: "12px",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
         }}
       >
         <h1
           style={{
             fontSize: "32px",
-            fontWeight: "700",
-            marginBottom: "20px",
+            fontWeight: "bold",
             textAlign: "center",
+            marginBottom: "20px",
           }}
         >
           Rate My Routine
         </h1>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          <TimeDropdown
-            label="Wake Time"
-            hour={wakeHour}
-            setHour={setWakeHour}
-            meridiem={wakeMeridiem}
-            setMeridiem={setWakeMeridiem}
-          />
+        {/* Wake + Sleep Side by Side */}
+        <div
+          style={{
+            display: "flex",
+            gap: "20px",
+            marginBottom: "20px",
+          }}
+        >
+          <div style={{ flex: 1 }}>
+            <TimeDropdown
+              label="Wake Time"
+              hour={wakeHour}
+              setHour={setWakeHour}
+              meridiem={wakeMeridiem}
+              setMeridiem={setWakeMeridiem}
+            />
+          </div>
 
-          <TimeDropdown
-            label="Sleep Time"
-            hour={sleepHour}
-            setHour={setSleepHour}
-            meridiem={sleepMeridiem}
-            setMeridiem={setSleepMeridiem}
-          />
-
-          <button
-            onClick={generateHours}
-            style={{
-              padding: "12px",
-              background: "#2563eb",
-              color: "white",
-              borderRadius: "8px",
-              border: "none",
-              cursor: "pointer",
-              fontSize: "16px",
-            }}
-          >
-            Generate Hours
-          </button>
+          <div style={{ flex: 1 }}>
+            <TimeDropdown
+              label="Sleep Time"
+              hour={sleepHour}
+              setHour={setSleepHour}
+              meridiem={sleepMeridiem}
+              setMeridiem={setSleepMeridiem}
+            />
+          </div>
         </div>
 
-        {/* Generated hour list */}
-        <div style={{ marginTop: "25px", display: "flex", flexDirection: "column", gap: "14px" }}>
+        {/* Generate hours button */}
+        <button
+          onClick={generateHours}
+          style={{
+            padding: "12px",
+            background: "#2563eb",
+            color: "white",
+            borderRadius: "8px",
+            border: "none",
+            cursor: "pointer",
+            fontSize: "16px",
+            width: "100%",
+            marginBottom: "20px",
+          }}
+        >
+          Generate Hours
+        </button>
+
+        {/* Hour input rows */}
+        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {hours.map((h, i) => (
             <HourInputRow
               key={i}
               hour={h.hour}
               value={h.value}
               onChange={(v) => {
-                const newData = [...hours];
-                newData[i].value = v;
-                setHours(newData);
+                const newHours = [...hours];
+                newHours[i].value = v;
+                setHours(newHours);
               }}
               onCopy={() => {
                 if (i > 0) {
-                  const newData = [...hours];
-                  newData[i].value = newData[i - 1].value;
-                  setHours(newData);
+                  const newHours = [...hours];
+                  newHours[i].value = newHours[i - 1].value;
+                  setHours(newHours);
                 }
               }}
             />
           ))}
         </div>
 
+        {/* Rate button */}
         {hours.length > 0 && (
           <button
             onClick={handleRate}
             style={{
-              marginTop: "30px",
+              marginTop: "20px",
               padding: "12px",
               background: "green",
               color: "white",
