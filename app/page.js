@@ -7,62 +7,47 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
+  // Wake/sleep state
   const [wakeHour, setWakeHour] = useState(7);
   const [wakeMeridiem, setWakeMeridiem] = useState("AM");
+
   const [sleepHour, setSleepHour] = useState(10);
   const [sleepMeridiem, setSleepMeridiem] = useState("PM");
+
   const [hours, setHours] = useState([]);
 
-  const pageStyle = {
-    minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#f0f0f0",
-    padding: "20px",
+  // Convert to 24-hour format
+  const to24 = (hour, mer) => {
+    hour = Number(hour);
+    if (mer === "PM" && hour !== 12) hour += 12;
+    if (mer === "AM" && hour === 12) hour = 0;
+    return hour;
   };
 
-  const boxStyle = {
-    background: "white",
-    width: "100%",
-    maxWidth: "550px",
-    borderRadius: "16px",
-    padding: "40px",
-    boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
-    border: "1px solid #ddd",
+  // Convert back to display format
+  const display12 = (h24) => {
+    const h = h24 % 12 || 12;
+    const mer = h24 < 12 ? "AM" : "PM";
+    return `${h}:00 ${mer}`;
   };
 
-  const titleStyle = {
-    fontSize: "34px",
-    fontWeight: "800",
-    marginBottom: "30px",
-    textAlign: "center",
-  };
-
-  const generateHours = () => {
-    const to24 = (hour, mer) => {
-      let h = Number(hour);
-      if (mer === "PM" && h !== 12) h += 12;
-      if (mer === "AM" && h === 12) h = 0;
-      return h;
-    };
-
-    const display12 = (h24) => {
-      const h = h24 % 12 === 0 ? 12 : h24 % 12;
-      const mer = h24 < 12 || h24 === 24 ? "AM" : "PM";
-      return `${h}:00 ${mer}`;
-    };
-
-    const start = to24(wakeHour, wakeMeridiem);
+  // FIXED — handles crossing midnight properly
+  function generateHours() {
+    let start = to24(wakeHour, wakeMeridiem);
     let end = to24(sleepHour, sleepMeridiem);
-    let finalEnd = end <= start ? end + 24 : end;
 
-    const list = [];
-    for (let h = start; h < finalEnd; h++) {
-      list.push({ hour: display12(h), value: "" });
+    let list = [];
+    let current = start;
+
+    list.push({ hour: display12(current), value: "" });
+
+    while (current !== end) {
+      current = (current + 1) % 24; // wraps after midnight
+      list.push({ hour: display12(current), value: "" });
     }
+
     setHours(list);
-  };
+  }
 
   async function handleRate() {
     const routine = hours.map((h) => ({
@@ -85,12 +70,38 @@ export default function Home() {
   }
 
   return (
-    <div style={pageStyle}>
-      <div style={boxStyle}>
-        <h1 style={titleStyle}>Rate My Routine</h1>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f5f5f5",
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: "50px",
+      }}
+    >
+      {/* Center Card */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: "600px",
+          background: "white",
+          borderRadius: "12px",
+          padding: "30px",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "32px",
+            fontWeight: "700",
+            marginBottom: "20px",
+            textAlign: "center",
+          }}
+        >
+          Rate My Routine
+        </h1>
 
-        {/* time pickers */}
-        <div style={{ marginBottom: "20px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           <TimeDropdown
             label="Wake Time"
             hour={wakeHour}
@@ -98,8 +109,6 @@ export default function Home() {
             meridiem={wakeMeridiem}
             setMeridiem={setWakeMeridiem}
           />
-
-          <div style={{ height: "15px" }}></div>
 
           <TimeDropdown
             label="Sleep Time"
@@ -112,44 +121,36 @@ export default function Home() {
           <button
             onClick={generateHours}
             style={{
-              width: "100%",
               padding: "12px",
-              marginTop: "20px",
-              background: "#2463eb",
+              background: "#2563eb",
               color: "white",
+              borderRadius: "8px",
               border: "none",
-              borderRadius: "10px",
-              fontSize: "16px",
               cursor: "pointer",
+              fontSize: "16px",
             }}
           >
             Generate Hours
           </button>
         </div>
 
-        {/* hour inputs */}
-        <div
-          style={{
-            maxHeight: "300px",
-            overflowY: "auto",
-            paddingRight: "5px",
-          }}
-        >
+        {/* Generated hour list */}
+        <div style={{ marginTop: "25px", display: "flex", flexDirection: "column", gap: "14px" }}>
           {hours.map((h, i) => (
             <HourInputRow
               key={i}
               hour={h.hour}
               value={h.value}
               onChange={(v) => {
-                const newHours = [...hours];
-                newHours[i].value = v;
-                setHours(newHours);
+                const newData = [...hours];
+                newData[i].value = v;
+                setHours(newData);
               }}
               onCopy={() => {
                 if (i > 0) {
-                  const newHours = [...hours];
-                  newHours[i].value = newHours[i - 1].value;
-                  setHours(newHours);
+                  const newData = [...hours];
+                  newData[i].value = newData[i - 1].value;
+                  setHours(newData);
                 }
               }}
             />
@@ -160,15 +161,15 @@ export default function Home() {
           <button
             onClick={handleRate}
             style={{
-              width: "100%",
-              marginTop: "25px",
+              marginTop: "30px",
               padding: "12px",
-              background: "#16a34a",
+              background: "green",
               color: "white",
+              borderRadius: "8px",
               border: "none",
-              borderRadius: "10px",
-              fontSize: "16px",
               cursor: "pointer",
+              fontSize: "16px",
+              width: "100%",
             }}
           >
             Rate My Day
