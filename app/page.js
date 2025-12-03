@@ -11,23 +11,48 @@ export default function Home() {
   const [wakeMeridiem, setWakeMeridiem] = useState("AM");
   const [sleepHour, setSleepHour] = useState(10);
   const [sleepMeridiem, setSleepMeridiem] = useState("PM");
-
   const [hours, setHours] = useState([]);
 
-  const to24 = (hour, mer) => {
-    let h = Number(hour);
-    if (mer === "PM" && h !== 12) h += 12;
-    if (mer === "AM" && h === 12) h = 0;
-    return h;
+  const pageStyle = {
+    minHeight: "100vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    background: "#f0f0f0",
+    padding: "20px",
   };
 
-  const display12 = (h24) => {
-    const h = h24 % 12 === 0 ? 12 : h24 % 12;
-    const mer = h24 < 12 || h24 === 24 ? "AM" : "PM";
-    return `${h}:00 ${mer}`;
+  const boxStyle = {
+    background: "white",
+    width: "100%",
+    maxWidth: "550px",
+    borderRadius: "16px",
+    padding: "40px",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.1)",
+    border: "1px solid #ddd",
   };
 
-  function generateHours() {
+  const titleStyle = {
+    fontSize: "34px",
+    fontWeight: "800",
+    marginBottom: "30px",
+    textAlign: "center",
+  };
+
+  const generateHours = () => {
+    const to24 = (hour, mer) => {
+      let h = Number(hour);
+      if (mer === "PM" && h !== 12) h += 12;
+      if (mer === "AM" && h === 12) h = 0;
+      return h;
+    };
+
+    const display12 = (h24) => {
+      const h = h24 % 12 === 0 ? 12 : h24 % 12;
+      const mer = h24 < 12 || h24 === 24 ? "AM" : "PM";
+      return `${h}:00 ${mer}`;
+    };
+
     const start = to24(wakeHour, wakeMeridiem);
     let end = to24(sleepHour, sleepMeridiem);
     let finalEnd = end <= start ? end + 24 : end;
@@ -36,12 +61,14 @@ export default function Home() {
     for (let h = start; h < finalEnd; h++) {
       list.push({ hour: display12(h), value: "" });
     }
-
     setHours(list);
-  }
+  };
 
   async function handleRate() {
-    const routine = hours.map((h) => ({ hour: h.hour, action: h.value }));
+    const routine = hours.map((h) => ({
+      hour: h.hour,
+      action: h.value,
+    }));
 
     const res = await fetch("/api/rate", {
       method: "POST",
@@ -58,11 +85,12 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-6">
-      <div className="bg-white shadow-lg rounded-2xl p-10 w-full max-w-2xl border border-gray-200">
-        <h1 className="text-4xl font-bold text-center mb-8">Rate My Routine</h1>
+    <div style={pageStyle}>
+      <div style={boxStyle}>
+        <h1 style={titleStyle}>Rate My Routine</h1>
 
-        <div className="space-y-4">
+        {/* time pickers */}
+        <div style={{ marginBottom: "20px" }}>
           <TimeDropdown
             label="Wake Time"
             hour={wakeHour}
@@ -70,6 +98,8 @@ export default function Home() {
             meridiem={wakeMeridiem}
             setMeridiem={setWakeMeridiem}
           />
+
+          <div style={{ height: "15px" }}></div>
 
           <TimeDropdown
             label="Sleep Time"
@@ -81,13 +111,30 @@ export default function Home() {
 
           <button
             onClick={generateHours}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg w-full hover:bg-blue-700 transition"
+            style={{
+              width: "100%",
+              padding: "12px",
+              marginTop: "20px",
+              background: "#2463eb",
+              color: "white",
+              border: "none",
+              borderRadius: "10px",
+              fontSize: "16px",
+              cursor: "pointer",
+            }}
           >
             Generate Hours
           </button>
         </div>
 
-        <div className="mt-8 space-y-3 max-h-96 overflow-y-auto pr-2">
+        {/* hour inputs */}
+        <div
+          style={{
+            maxHeight: "300px",
+            overflowY: "auto",
+            paddingRight: "5px",
+          }}
+        >
           {hours.map((h, i) => (
             <HourInputRow
               key={i}
@@ -112,7 +159,17 @@ export default function Home() {
         {hours.length > 0 && (
           <button
             onClick={handleRate}
-            className="mt-8 px-4 py-2 bg-green-600 text-white rounded-lg w-full hover:bg-green-700 transition"
+            style={{
+              width: "100%",
+              marginTop: "25px",
+              padding: "12px",
+              background: "#16a34a",
+              color: "white",
+              border: "none",
+              borderRadius: "10px",
+              fontSize: "16px",
+              cursor: "pointer",
+            }}
           >
             Rate My Day
           </button>
