@@ -14,7 +14,6 @@ The user provides:
 - A list of hourly activities from wake → sleep.
 
 You must rate **each hour** from **0–20** using these rules:
-
 0–5  = terrible use of time  
 6–10 = weak  
 11–14 = decent  
@@ -22,33 +21,30 @@ You must rate **each hour** from **0–20** using these rules:
 18–20 = excellent  
 
 General rules:
-- Extremely useless tasks like “stared at wall”, “watched paint dry”, “mindlessly scrolled TikTok” are **0–3**.
-- Repetitive tasks with no break = **-3 penalty** to that hour.  
+- Extremely useless tasks like “stared at wall”, “watched paint dry”, “mindlessly scrolled TikTok” are 0–3.
+- Repetitive tasks with no break = -3 penalty.
 - Switching tasks counts as a “mental break”.
-- Overworking more than **14 hours awake** = reduce total score.
-- Sleeping less than 6 hours = reduce total score.
-- Productive stacking (e.g., “listened to audiobook while cleaning”) is **very high score**.
-- Neutral relaxing activities (games, TV, walking, resting) = **8–13**, depending on balance.
-- Tasks that complete a major chore or goal = **15–20**.
+- Overworking > 14 hours awake = reduce total score.
+- Sleeping < 6 hours = reduce total score.
+- Productive stacking (e.g., “listened to audiobook while cleaning”) = high score.
+- Neutral relaxing activities (games, TV, walking, resting) = 8–13 depending on balance.
+- Tasks completing a major chore or goal = 15–20.
 
 Return JSON ONLY in this format:
 
 {
   "hourlyRatings": [
-    { "hour": "1 PM", "activity": "activity text", "rating": 14 },
-    ...
+    { "hour": "1 PM", "activity": "activity text", "rating": 14 }
   ],
   "graphData": [
-    { "x": "1 PM", "y": 14 },
-    ...
+    { "x": "1 PM", "y": 14 }
   ],
   "summaryScore": 0-100,
   "bestHour": "time",
   "worstHour": "time",
-  "suggestion": "one paragraph improvement advice"
+  "suggestion": "one paragraph improvement advice",
+  "explanation": "one paragraph overall explanation"
 }
-
-Here is the user's data:
 
 Wake time: ${wakeTime}
 Sleep time: ${sleepTime}
@@ -62,10 +58,21 @@ Routine: ${JSON.stringify(routine, null, 2)}
 
     const raw = completion.choices[0].message.content;
 
-    const json = JSON.parse(raw);
+    // Safe JSON parse
+    let json;
+    try {
+      json = JSON.parse(raw);
+    } catch (err) {
+      console.error("GPT returned invalid JSON:", raw);
+      return new Response(
+        JSON.stringify({ error: "Failed to parse GPT response", raw }),
+        { status: 500 }
+      );
+    }
 
     return new Response(JSON.stringify(json), { status: 200 });
   } catch (error) {
+    console.error(error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500 }
