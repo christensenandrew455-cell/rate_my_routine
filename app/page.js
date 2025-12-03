@@ -16,7 +16,6 @@ export default function Home() {
 
   const [hours, setHours] = useState([]);
 
-  // Convert 12hr -> 24hr
   const to24 = (hour, mer) => {
     let h = Number(hour);
     if (mer === "PM" && h !== 12) h += 12;
@@ -24,14 +23,12 @@ export default function Home() {
     return h;
   };
 
-  // Convert 24hr -> 12hr display
   const display12 = (h24) => {
     const h = h24 % 12 === 0 ? 12 : h24 % 12;
     const mer = h24 < 12 || h24 === 24 ? "AM" : "PM";
     return `${h}:00 ${mer}`;
   };
 
-  // FIXED hour generator
   function generateHours() {
     let start = to24(wakeHour, wakeMeridiem);
     let end = to24(sleepHour, sleepMeridiem);
@@ -50,10 +47,7 @@ export default function Home() {
   }
 
   async function handleRate() {
-    const routine = hours.map((h) => ({
-      hour: h.hour,
-      action: h.value,
-    }));
+    const routine = hours.map((h) => ({ hour: h.hour, action: h.value }));
 
     const res = await fetch("/api/rate", {
       method: "POST",
@@ -70,42 +64,27 @@ export default function Home() {
   }
 
   return (
-    <div
-      style={{
-        padding: "40px",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: "600px",
-          background: "white",
-          padding: "30px",
-          borderRadius: "12px",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        }}
-      >
-        <h1
-          style={{
-            fontSize: "32px",
-            fontWeight: "bold",
-            textAlign: "center",
-            marginBottom: "20px",
-          }}
-        >
+    <div style={{ padding: "40px", maxWidth: "1000px", margin: "0 auto" }}>
+      
+      {/* Hero Box */}
+      <div style={{
+        background: "#fff",
+        borderRadius: "12px",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+        padding: "30px",
+        marginBottom: "40px",
+      }}>
+        <h1 style={{ fontSize: "36px", fontWeight: "700", textAlign: "center", marginBottom: "20px" }}>
           Rate My Routine
         </h1>
 
+        {/* App Description */}
+        <p style={{ fontSize: "18px", color: "#444", marginBottom: "30px", lineHeight: "1.6" }}>
+          “Rate My Routine” is your personal productivity companion. Whether you’re looking for a fun way to see how your day measures up, a serious tool to optimize your daily habits, or just curious about how productive your routine really is, this app has you covered. Enter your wake time, bedtime, and hourly activities, and let our smart AI evaluate each hour, giving you a detailed productivity score, visual insights, and actionable suggestions to help you make the most of your day.
+        </p>
+
         {/* Wake + Sleep Side by Side */}
-        <div
-          style={{
-            display: "flex",
-            gap: "20px",
-            marginBottom: "20px",
-          }}
-        >
+        <div style={{ display: "flex", gap: "20px", marginBottom: "20px" }}>
           <div style={{ flex: 1 }}>
             <TimeDropdown
               label="Wake Time"
@@ -115,7 +94,6 @@ export default function Home() {
               setMeridiem={setWakeMeridiem}
             />
           </div>
-
           <div style={{ flex: 1 }}>
             <TimeDropdown
               label="Sleep Time"
@@ -127,25 +105,24 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Generate hours button */}
         <button
           onClick={generateHours}
           style={{
-            padding: "12px",
+            width: "100%",
+            padding: "14px",
+            fontSize: "16px",
+            fontWeight: "600",
             background: "#2563eb",
-            color: "white",
+            color: "#fff",
             borderRadius: "8px",
             border: "none",
             cursor: "pointer",
-            fontSize: "16px",
-            width: "100%",
             marginBottom: "20px",
           }}
         >
           Generate Hours
         </button>
 
-        {/* Hour input rows */}
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {hours.map((h, i) => (
             <HourInputRow
@@ -168,25 +145,57 @@ export default function Home() {
           ))}
         </div>
 
-        {/* Rate button */}
         {hours.length > 0 && (
           <button
             onClick={handleRate}
             style={{
-              marginTop: "20px",
-              padding: "12px",
+              width: "100%",
+              padding: "14px",
+              fontSize: "16px",
+              fontWeight: "600",
               background: "green",
               color: "white",
               borderRadius: "8px",
               border: "none",
               cursor: "pointer",
-              fontSize: "16px",
-              width: "100%",
+              marginTop: "20px",
             }}
           >
             Rate My Day
           </button>
         )}
+      </div>
+
+      {/* FAQ Section */}
+      <div style={{
+        background: "#f9f9f9",
+        borderRadius: "12px",
+        padding: "30px",
+        boxShadow: "0 4px 16px rgba(0,0,0,0.05)",
+        marginBottom: "40px",
+      }}>
+        <h2 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "20px", textAlign: "center" }}>
+          Frequently Asked Questions
+        </h2>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+          <div>
+            <strong>Is Rate My Routine free?</strong>
+            <p>Yes! You can use it without any cost.</p>
+          </div>
+          <div>
+            <strong>Does Rate My Routine take my information?</strong>
+            <p>No, all information is deleted and not saved.</p>
+          </div>
+          <div>
+            <strong>How does it work?</strong>
+            <p>Simply enter your wake time, bedtime, and daily activities. The AI evaluates each hour and gives you a productivity score along with suggestions.</p>
+          </div>
+          <div>
+            <strong>Should I take my results seriously?</strong>
+            <p>The results can be viewed as serious or just for fun—it’s up to you!</p>
+          </div>
+        </div>
       </div>
     </div>
   );
