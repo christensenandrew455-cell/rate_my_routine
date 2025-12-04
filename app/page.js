@@ -13,6 +13,9 @@ export default function Home() {
   const [sleepMeridiem, setSleepMeridiem] = useState("PM");
   const [hours, setHours] = useState([]);
 
+  // NEW
+  const [loading, setLoading] = useState(false);
+
   const to24 = (hour, mer) => {
     let h = Number(hour);
     if (mer === "PM" && h !== 12) h += 12;
@@ -42,6 +45,9 @@ export default function Home() {
   }
 
   async function handleRate() {
+    if (loading) return; // prevents double-clicks
+    setLoading(true);
+
     const routine = hours.map((h) => ({ hour: h.hour, action: h.value }));
 
     const res = await fetch("/api/rate", {
@@ -55,6 +61,7 @@ export default function Home() {
     });
 
     const data = await res.json();
+
     router.push(`/results?data=${encodeURIComponent(JSON.stringify(data))}`);
   }
 
@@ -164,20 +171,22 @@ export default function Home() {
         {hours.length > 0 && (
           <button
             onClick={handleRate}
+            disabled={loading}
             style={{
               width: "100%",
               padding: "14px",
               fontSize: "16px",
               fontWeight: "600",
-              background: "green",
+              background: loading ? "gray" : "green",
               color: "white",
               borderRadius: "8px",
               border: "none",
-              cursor: "pointer",
+              cursor: loading ? "not-allowed" : "pointer",
               marginTop: "20px",
+              opacity: loading ? 0.7 : 1,
             }}
           >
-            Rate My Day
+            {loading ? "Rating..." : "Rate My Day"}
           </button>
         )}
       </div>
