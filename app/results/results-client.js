@@ -25,24 +25,24 @@ export default function ResultsClient() {
   if (!data) return <div style={{ padding: "40px" }}>Loading...</div>;
 
   // --- WORD SCORE PICKER ---
- const getScoreWord = (score) => {
-  if (score >= 0 && score < 10) return "how?";
-  if (score >= 10 && score < 20) return "really";
-  if (score >= 20 && score < 30) return "bum";
-  if (score >= 30 && score < 40) return "getting there";
-  if (score >= 40 && score < 50) return "better than a bum";
-  if (score >= 50 && score < 60) return "halfway";
-  if (score >= 60 && score < 70) return "better";
-  if (score >= 70 && score < 80) return "good";
-  if (score >= 80 && score < 90) return "excellent";
-  if (score >= 90 && score <= 100) return "amazing";
+  const getScoreWord = (score) => {
+    if (score >= 0 && score < 10) return "how?";
+    if (score >= 10 && score < 20) return "really";
+    if (score >= 20 && score < 30) return "bum";
+    if (score >= 30 && score < 40) return "getting there";
+    if (score >= 40 && score < 50) return "better than a bum";
+    if (score >= 50 && score < 60) return "halfway";
+    if (score >= 60 && score < 70) return "better";
+    if (score >= 70 && score < 80) return "good";
+    if (score >= 80 && score < 90) return "excellent";
+    if (score >= 90 && score <= 100) return "amazing";
 
-  return ""; // fallback
-};
+    return "unknown";
+  };
 
   const scoreWord = getScoreWord(data.summaryScore);
 
-  // Remap GPT 0–20 rating to -10 → 10 for graph
+  // Remap GPT 0–20 ratings for graph (-10 → 10)
   const graphData =
     data?.graphData?.map((d) => ({
       x: d.x,
@@ -57,11 +57,12 @@ export default function ResultsClient() {
         Your Productivity Results
       </h1>
 
-      {/* Summary Score + WORD */}
+      {/* Summary Score */}
       <div style={{ fontSize: "64px", fontWeight: "800", marginBottom: "10px" }}>
         {data.summaryScore}/100
       </div>
 
+      {/* Word Based on Score */}
       <div
         style={{
           fontSize: "32px",
@@ -140,19 +141,13 @@ export default function ResultsClient() {
           marginBottom: "40px",
         }}
       >
-        <h2
-          style={{
-            fontSize: "22px",
-            fontWeight: "700",
-            marginBottom: "12px",
-          }}
-        >
+        <h2 style={{ fontSize: "22px", fontWeight: "700", marginBottom: "12px" }}>
           Suggestions for Improvement
         </h2>
         <p style={{ fontSize: "18px", color: "#222" }}>{data.suggestion}</p>
       </div>
 
-      {/* Rate Another Day Button */}
+      {/* Button */}
       <button
         onClick={() => (window.location.href = "/")}
         style={{
