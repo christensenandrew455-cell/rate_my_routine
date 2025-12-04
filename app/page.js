@@ -33,6 +33,7 @@ export default function Home() {
     let result = [];
     let current = start;
     result.push({ hour: display12(current), value: "" });
+
     while (current !== end) {
       current = (current + 1) % 24;
       result.push({ hour: display12(current), value: "" });
@@ -58,22 +59,51 @@ export default function Home() {
   }
 
   return (
-    <div style={{ padding: "40px", maxWidth: "700px", margin: "0 auto" }}>
+    <div style={{ padding: "40px", maxWidth: "750px", margin: "0 auto" }}>
 
-      {/* Hero Section */}
-      <div style={{
-        background: "#fff",
-        borderRadius: "12px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-        padding: "30px",
-        marginBottom: "40px",
-      }}>
-        <h1 style={{ fontSize: "36px", fontWeight: "700", textAlign: "center", marginBottom: "20px" }}>
+      {/* HERO SECTION */}
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "12px",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+          padding: "35px",
+          marginBottom: "40px",
+        }}
+      >
+        <h1
+          style={{
+            fontSize: "40px",
+            fontWeight: "700",
+            textAlign: "center",
+            marginBottom: "10px",
+          }}
+        >
           Rate My Routine
         </h1>
 
-        {/* Wake + Sleep Side by Side (centered & closer) */}
-        <div style={{ display: "flex", justifyContent: "center", gap: "10px", marginBottom: "20px" }}>
+        <p
+          style={{
+            fontSize: "18px",
+            textAlign: "center",
+            color: "#444",
+            marginBottom: "25px",
+            lineHeight: "1.6",
+          }}
+        >
+          Analyze and improve your daily productivity with intelligent,
+          hour-by-hour insights powered by AI.
+        </p>
+
+        {/* Wake + Sleep Inputs */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+            marginBottom: "20px",
+          }}
+        >
           <TimeDropdown
             label="Wake Time"
             hour={wakeHour}
@@ -108,6 +138,7 @@ export default function Home() {
           Generate Hours
         </button>
 
+        {/* Hour Inputs */}
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {hours.map((h, i) => (
             <HourInputRow
@@ -151,49 +182,111 @@ export default function Home() {
         )}
       </div>
 
-      {/* App Description */}
-      <div style={{
-        background: "#fff",
-        borderRadius: "12px",
-        padding: "30px",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-        marginBottom: "40px",
-      }}>
-        <p style={{ fontSize: "18px", color: "#444", lineHeight: "1.6" }}>
-          “Rate My Routine” is your personal productivity companion. Whether for fun, serious tracking, or just curiosity, this app evaluates each hour of your day, gives you scores, visual graphs, and suggestions to make the most of every day.
+      {/* ABOUT SECTION */}
+      <div
+        style={{
+          background: "#fff",
+          borderRadius: "12px",
+          padding: "30px",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
+          marginBottom: "40px",
+        }}
+      >
+        <p style={{ fontSize: "18px", color: "#444", lineHeight: "1.7" }}>
+          Rate My Routine is a simple but powerful tool that helps you understand
+          how you spend your day. Whether you’re using it for fun, serious habit
+          tracking, or improving productivity, the app breaks down your day
+          hour-by-hour and gives you personalized AI feedback.
+          <br />
+          <br />
+          You’ll receive a productivity score from –10 to +10 for each hour,
+          along with suggestions that help you build better habits, stay
+          organized, and understand how your actions shape your results.
         </p>
+
+        <ul
+          style={{
+            marginTop: "20px",
+            color: "#444",
+            fontSize: "17px",
+            lineHeight: "1.7",
+            paddingLeft: "20px",
+          }}
+        >
+          <li>✔ Easy hour generator</li>
+          <li>✔ AI-powered productivity scoring</li>
+          <li>✔ Personalized improvement suggestions</li>
+          <li>✔ No login required</li>
+          <li>✔ No data stored or tracked</li>
+        </ul>
       </div>
 
-      {/* FAQ Section */}
-      <div style={{
-        background: "#f9f9f9",
-        borderRadius: "12px",
-        padding: "30px",
-        boxShadow: "0 4px 16px rgba(0,0,0,0.05)",
-        marginBottom: "40px",
-      }}>
-        <h2 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "20px", textAlign: "center" }}>
+      {/* FAQ SECTION */}
+      <div
+        style={{
+          background: "#f9f9f9",
+          borderRadius: "12px",
+          padding: "30px",
+          boxShadow: "0 4px 16px rgba(0,0,0,0.05)",
+          marginBottom: "40px",
+        }}
+      >
+        <h2
+          style={{
+            fontSize: "28px",
+            fontWeight: "700",
+            marginBottom: "20px",
+            textAlign: "center",
+          }}
+        >
           Frequently Asked Questions
         </h2>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
           <div>
             <strong>Is Rate My Routine free?</strong>
-            <p>Yes! You can use it without any cost.</p>
+            <p>Yes. The tool is completely free to use with no account required.</p>
           </div>
+
           <div>
-            <strong>Does Rate My Routine take my information?</strong>
-            <p>No, all information is deleted and not saved.</p>
+            <strong>Does Rate My Routine save my information?</strong>
+            <p>
+              No. Your routine is processed only to generate your score and then
+              immediately deleted. Nothing is stored or shared.
+            </p>
           </div>
+
           <div>
-            <strong>How does it work?</strong>
-            <p>Enter your wake time, bedtime, and daily activities. The AI evaluates each hour and gives you a productivity score along with suggestions.</p>
+            <strong>How does the app work?</strong>
+            <p>
+              You pick your wake time and sleep time, fill in what you did each
+              hour, and the AI scores your full day from –10 to +10 while giving
+              helpful improvement tips.
+            </p>
           </div>
+
           <div>
-            <strong>Should I take my results seriously?</strong>
-            <p>The results can be viewed as serious or just for fun—it’s up to you!</p>
+            <strong>Should I take the results seriously?</strong>
+            <p>
+              You can treat them seriously or use them just for fun. Many people
+              use it for habit tracking, while others use it casually.
+            </p>
           </div>
         </div>
+      </div>
+
+      {/* FOOTER */}
+      <div
+        style={{
+          textAlign: "center",
+          color: "#666",
+          fontSize: "14px",
+          marginTop: "40px",
+          paddingBottom: "30px",
+        }}
+      >
+        <p>Rate My Routine © 2025 — No data is stored. All analysis is temporary.</p>
+        <p>This site is for productivity guidance and entertainment purposes.</p>
       </div>
     </div>
   );
