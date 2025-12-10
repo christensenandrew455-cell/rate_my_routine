@@ -13,8 +13,10 @@ export default function Home() {
   const [sleepMeridiem, setSleepMeridiem] = useState("PM");
   const [hours, setHours] = useState([]);
 
-  // NEW
   const [loading, setLoading] = useState(false);
+
+  // NEW
+  const [errorBox, setErrorBox] = useState(null);
 
   const to24 = (hour, mer) => {
     let h = Number(hour);
@@ -45,10 +47,14 @@ export default function Home() {
   }
 
   async function handleRate() {
-    if (loading) return; // prevents double-clicks
+    if (loading) return;
     setLoading(true);
+    setErrorBox(null);
 
-    const routine = hours.map((h) => ({ hour: h.hour, action: h.value }));
+    const routine = hours.map((h) => ({
+      hour: h.hour,
+      activity: h.value, // FIXED — must match API
+    }));
 
     const res = await fetch("/api/rate", {
       method: "POST",
@@ -62,13 +68,25 @@ export default function Home() {
 
     const data = await res.json();
 
+    if (!res.ok) {
+      setLoading(false);
+
+      setErrorBox({
+        hour: data.invalidTime,
+        activity: data.invalidActivity,
+        reason: data.error
+      });
+
+      return;
+    }
+
     router.push(`/results?data=${encodeURIComponent(JSON.stringify(data))}`);
   }
 
   return (
     <div style={{ padding: "40px", maxWidth: "750px", margin: "0 auto" }}>
-
-      {/* HERO SECTION */}
+      
+      {/* HERO CARD */}
       <div
         style={{
           background: "#fff",
@@ -168,6 +186,26 @@ export default function Home() {
           ))}
         </div>
 
+        {/* ERROR BOX — placed where you requested */}
+        {errorBox && (
+          <div
+            style={{
+              marginTop: "20px",
+              padding: "15px",
+              background: "#ffe5e5",
+              border: "1px solid #ff9999",
+              borderRadius: "8px",
+              color: "#b30000",
+              fontSize: "16px",
+            }}
+          >
+            <strong>Invalid Activity Detected</strong>
+            <p><b>Hour:</b> {errorBox.hour}</p>
+            <p><b>Activity:</b> "{errorBox.activity}"</p>
+            <p>{errorBox.reason}</p>
+          </div>
+        )}
+
         {hours.length > 0 && (
           <button
             onClick={handleRate}
@@ -203,14 +241,7 @@ export default function Home() {
       >
         <p style={{ fontSize: "18px", color: "#444", lineHeight: "1.7" }}>
           Rate My Routine is a simple but powerful tool that helps you understand
-          how you spend your day. Whether you’re using it for fun, serious habit
-          tracking, or improving productivity, the app breaks down your day
-          hour-by-hour and gives you personalized AI feedback.
-          <br />
-          <br />
-          You’ll receive a productivity score from –10 to +10 for each hour,
-          along with suggestions that help you build better habits, stay
-          organized, and understand how your actions shape your results.
+          how you spend your day...
         </p>
 
         <ul
@@ -230,7 +261,7 @@ export default function Home() {
         </ul>
       </div>
 
-      {/* FAQ SECTION */}
+      {/* FAQ */}
       <div
         style={{
           background: "#f9f9f9",
@@ -254,37 +285,21 @@ export default function Home() {
         <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
           <div>
             <strong>Is Rate My Routine free?</strong>
-            <p>Yes. The tool is completely free to use with no account required.</p>
+            <p>Yes — totally free.</p>
           </div>
 
           <div>
-            <strong>Does Rate My Routine save my information?</strong>
-            <p>
-              No. Your routine is processed only to generate your score and then
-              immediately deleted. Nothing is stored or shared.
-            </p>
+            <strong>Does the site save anything?</strong>
+            <p>No — nothing is stored or tracked.</p>
           </div>
 
           <div>
-            <strong>How does the app work?</strong>
-            <p>
-              You pick your wake time and sleep time, fill in what you did each
-              hour, and the AI scores your full day from –10 to +10 while giving
-              helpful improvement tips.
-            </p>
-          </div>
-
-          <div>
-            <strong>Should I take the results seriously?</strong>
-            <p>
-              You can treat them seriously or use them just for fun. Many people
-              use it for habit tracking, while others use it casually.
-            </p>
+            <strong>How does it work?</strong>
+            <p>You enter your day, AI scores it.</p>
           </div>
         </div>
       </div>
 
-      {/* FOOTER */}
       <div
         style={{
           textAlign: "center",
@@ -294,8 +309,7 @@ export default function Home() {
           paddingBottom: "30px",
         }}
       >
-        <p>Rate My Routine © 2025 — No data is stored. All analysis is temporary.</p>
-        <p>This site is for productivity guidance and entertainment purposes.</p>
+        <p>Rate My Routine © 2025 — No data stored.</p>
       </div>
     </div>
   );
