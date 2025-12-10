@@ -9,12 +9,21 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        {/* Google AdSense */}
+        {/* Ezoic CMP Scripts */}
+        <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
+        <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
+
+        {/* Ezoic Standalone Loader */}
+        <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
+
         <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9836120352832422"
-          crossOrigin="anonymous"
-        ></script>
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.ezstandalone = window.ezstandalone || {};
+              ezstandalone.cmd = ezstandalone.cmd || [];
+            `,
+          }}
+        />
       </head>
 
       <body className="bg-gray-100 min-h-screen">
@@ -23,3 +32,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
