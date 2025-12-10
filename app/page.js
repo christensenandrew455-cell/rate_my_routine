@@ -14,8 +14,6 @@ export default function Home() {
   const [hours, setHours] = useState([]);
 
   const [loading, setLoading] = useState(false);
-
-  // NEW
   const [errorBox, setErrorBox] = useState(null);
 
   const to24 = (hour, mer) => {
@@ -53,7 +51,7 @@ export default function Home() {
 
     const routine = hours.map((h) => ({
       hour: h.hour,
-      activity: h.value, // FIXED — must match API
+      activity: h.value.trim() || "idle", // ensure non-empty input
     }));
 
     const res = await fetch("/api/rate", {
@@ -70,13 +68,11 @@ export default function Home() {
 
     if (!res.ok) {
       setLoading(false);
-
       setErrorBox({
         hour: data.invalidTime,
         activity: data.invalidActivity,
-        reason: data.error
+        reason: data.error,
       });
-
       return;
     }
 
@@ -85,7 +81,6 @@ export default function Home() {
 
   return (
     <div style={{ padding: "40px", maxWidth: "750px", margin: "0 auto" }}>
-      
       {/* HERO CARD */}
       <div
         style={{
@@ -186,7 +181,7 @@ export default function Home() {
           ))}
         </div>
 
-        {/* ERROR BOX — placed where you requested */}
+        {/* ERROR BOX */}
         {errorBox && (
           <div
             style={{
@@ -200,33 +195,37 @@ export default function Home() {
             }}
           >
             <strong>Invalid Activity Detected</strong>
-            <p><b>Hour:</b> {errorBox.hour}</p>
-            <p><b>Activity:</b> "{errorBox.activity}"</p>
+            <p>
+              <b>Hour:</b> {errorBox.hour}
+            </p>
+            <p>
+              <b>Activity:</b> "{errorBox.activity}"
+            </p>
             <p>{errorBox.reason}</p>
           </div>
         )}
 
-        {hours.length > 0 && (
-          <button
-            onClick={handleRate}
-            disabled={loading}
-            style={{
-              width: "100%",
-              padding: "14px",
-              fontSize: "16px",
-              fontWeight: "600",
-              background: loading ? "gray" : "green",
-              color: "white",
-              borderRadius: "8px",
-              border: "none",
-              cursor: loading ? "not-allowed" : "pointer",
-              marginTop: "20px",
-              opacity: loading ? 0.7 : 1,
-            }}
-          >
-            {loading ? "Rating..." : "Rate My Day"}
-          </button>
-        )}
+        {/* RATE BUTTON */}
+        <button
+          onClick={handleRate}
+          disabled={loading || hours.length === 0} // disabled until hours generated
+          style={{
+            width: "100%",
+            padding: "14px",
+            fontSize: "16px",
+            fontWeight: "600",
+            background: loading || hours.length === 0 ? "gray" : "green",
+            color: "white",
+            borderRadius: "8px",
+            border: "none",
+            cursor:
+              loading || hours.length === 0 ? "not-allowed" : "pointer",
+            marginTop: "20px",
+            opacity: loading || hours.length === 0 ? 0.7 : 1,
+          }}
+        >
+          {loading ? "Rating..." : "Rate My Day"}
+        </button>
       </div>
 
       {/* ABOUT SECTION */}
