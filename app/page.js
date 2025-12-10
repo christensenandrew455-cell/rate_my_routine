@@ -51,7 +51,7 @@ export default function Home() {
 
     const routine = hours.map((h) => ({
       hour: h.hour,
-      activity: h.value.trim() || "idle", // ensure non-empty input
+      activity: h.value.trim() || "idle",
     }));
 
     const res = await fetch("/api/rate", {
@@ -68,11 +68,16 @@ export default function Home() {
 
     if (!res.ok) {
       setLoading(false);
+
       setErrorBox({
         hour: data.invalidTime,
-        activity: data.invalidActivity,
+        activity:
+          data.invalidActivity ||
+          routine.find((r) => r.hour === data.invalidTime)?.activity ||
+          "idle",
         reason: data.error,
       });
+
       return;
     }
 
@@ -208,7 +213,7 @@ export default function Home() {
         {/* RATE BUTTON */}
         <button
           onClick={handleRate}
-          disabled={loading || hours.length === 0} // disabled until hours generated
+          disabled={loading || hours.length === 0}
           style={{
             width: "100%",
             padding: "14px",
