@@ -19,6 +19,9 @@ export default function Home() {
   // new: control visibility of the Rate button
   const [showRate, setShowRate] = useState(false);
 
+  // required for Learn More
+  const [showMore, setShowMore] = useState(false);
+
   const to24 = (hour, mer) => {
     let h = Number(hour);
     if (mer === "PM" && h !== 12) h += 12;
@@ -46,7 +49,6 @@ export default function Home() {
     }
     setHours(result);
 
-    // show the Rate button only after Generate Hours (personalize) is clicked
     setShowRate(true);
   }
 
@@ -241,7 +243,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* ABOUT SECTION */}
+      {/* ABOUT SECTION (NEW EXPANDABLE VERSION) */}
       <div
         style={{
           background: "#fff",
@@ -251,10 +253,63 @@ export default function Home() {
           marginBottom: "40px",
         }}
       >
+        <h2
+          style={{
+            fontSize: "28px",
+            fontWeight: "700",
+            marginBottom: "10px",
+            textAlign: "center",
+          }}
+        >
+          About Rate My Routine
+        </h2>
+
         <p style={{ fontSize: "18px", color: "#444", lineHeight: "1.7" }}>
-          Rate My Routine is a simple but powerful tool that helps you understand
-          how you spend your day...
+          A fast and intelligent way to evaluate your daily productivity, powered
+          by AI.
         </p>
+
+        <button
+          onClick={() => setShowMore((prev) => !prev)}
+          style={{
+            marginTop: "15px",
+            padding: "10px 16px",
+            background: "#2563eb",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontWeight: "600",
+            fontSize: "15px",
+          }}
+        >
+          {showMore ? "Show Less" : "Learn More"}
+        </button>
+
+        <div
+          style={{
+            maxHeight: showMore ? "500px" : "0px",
+            overflow: "hidden",
+            transition: "max-height 0.35s ease",
+          }}
+        >
+          <p
+            style={{
+              marginTop: "20px",
+              fontSize: "17px",
+              color: "#555",
+              lineHeight: "1.7",
+            }}
+          >
+            Rate My Routine helps you break down your day hour-by-hour and
+            understand exactly how productive each part of your day really is. By
+            analyzing your activities, the AI identifies wasted time, highlights
+            productive streaks, and gives you personalized suggestions to improve
+            your routine. It's built to be simple, private, and extremely
+            effective — no accounts, no data tracking, and no friction. Just
+            clear insights about your day.
+          </p>
+        </div>
 
         <ul
           style={{
@@ -265,15 +320,14 @@ export default function Home() {
             paddingLeft: "20px",
           }}
         >
-          <li>✔ Easy hour generator</li>
+          <li>✔ Easy to use</li>
           <li>✔ AI-powered productivity scoring</li>
           <li>✔ Personalized improvement suggestions</li>
-          <li>✔ No login required</li>
           <li>✔ No data stored or tracked</li>
         </ul>
       </div>
 
-      {/* FAQ */}
+      {/* FAQ SECTION */}
       <div
         style={{
           background: "#f9f9f9",
