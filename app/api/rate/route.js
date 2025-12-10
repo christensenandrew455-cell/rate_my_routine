@@ -5,6 +5,78 @@ export async function POST(req) {
     const body = await req.json();
     const { wakeTime, sleepTime, routine } = body;
 
+    // -----------------------------------------
+    // 1. GPT VALIDATES EACH ACTIVITY
+    // -----------------------------------------
+    for (let i = 0; i < routine.length; i++) {
+      const { hour, activity } = routine[i];
+
+      const validationPrompt = `
+Your job is to check if an activity is something a human can DO.
+
+Examples of NOT do-able (nonsense):
+- donkey
+- window
+- lamp post
+- grass
+- potato
+- blue square
+- triangle
+- air
+These are NOT actions, NOT tasks, NOT activities.
+
+Examples of do-able:
+- go to school
+- study
+- clean room
+- eat breakfast
+- play soccer
+- walk dog
+- do homework
+
+Respond ONLY in JSON:
+{
+  "doable": true or false,
+  "reason": "short explanation"
+}
+
+Activity: "${activity}"
+      `;
+
+      const validation = await openai.chat.completions.create({
+        model: "gpt-4.1",
+        messages: [{ role: "user", content: validationPrompt }],
+      });
+
+      let result;
+      try {
+        result = JSON.parse(validation.choices[0].message.content);
+      } catch (err) {
+        return new Response(
+          JSON.stringify({
+            error: `Validation JSON parse error at hour "${hour}".`,
+            invalidTime: hour
+          }),
+          { status: 400 }
+        );
+      }
+
+      if (!result.doable) {
+        return new Response(
+          JSON.stringify({
+            error: `The activity at ${hour} — "${activity}" — is NOT something a human can do. ${result.reason}`,
+            invalidTime: hour,
+            invalidActivity: activity
+          }),
+          { status: 400 }
+        );
+      }
+    }
+
+    // -----------------------------------------
+    // 2. ALL VALID → SEND RATING REQUEST
+    // -----------------------------------------
+
     const prompt = `
 You are a productivity evaluator.
 
@@ -13,24 +85,24 @@ The user provides:
 - Sleep time
 - A list of hourly activities from wake → sleep.
 
-You must rate **each hour** from **0–20** using these rules:
-0–5  = terrible use of time  
+You must rate each hour 0–20 using these rules:
+0–5  = terrible  
 6–10 = weak  
 11–14 = decent  
 15–17 = good  
 18–20 = excellent  
 
 General rules:
-- Extremely useless tasks like “stared at wall”, “watched paint dry”, “mindlessly scrolled TikTok” are 0–3.
-- Repetitive tasks with no break = -3 penalty.
-- Switching tasks counts as a “mental break”.
-- Overworking > 14 hours awake = reduce total score.
-- Sleeping < 6 hours = reduce total score.
-- Productive stacking (e.g., “listened to audiobook while cleaning”) = high score.
-- Neutral relaxing activities (games, TV, walking, resting) = 8–13 depending on balance.
-- Tasks completing a major chore or goal = 15–20.
+- Useless tasks (stare at wall, mindless scroll) = 0–3
+- Repetitive tasks no break = -3
+- Switching tasks = mental break
+- Overworking 14+ hrs = reduce
+- Sleep < 6 hrs = reduce
+- Productive stacking = high
+- Relaxing neutral = 8–13
+- Major achievements = 15–20
 
-Return JSON ONLY in this format:
+Return JSON ONLY:
 
 {
   "hourlyRatings": [
@@ -58,7 +130,6 @@ Routine: ${JSON.stringify(routine, null, 2)}
 
     const raw = completion.choices[0].message.content;
 
-    // Safe JSON parse
     let json;
     try {
       json = JSON.parse(raw);
@@ -71,6 +142,7 @@ Routine: ${JSON.stringify(routine, null, 2)}
     }
 
     return new Response(JSON.stringify(json), { status: 200 });
+
   } catch (error) {
     console.error(error);
     return new Response(
@@ -79,3 +151,4 @@ Routine: ${JSON.stringify(routine, null, 2)}
     );
   }
 }
+
