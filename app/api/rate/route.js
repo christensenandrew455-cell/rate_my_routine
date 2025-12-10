@@ -6,10 +6,10 @@ export async function POST(req) {
     const { wakeTime, sleepTime, routine } = body;
 
     // -----------------------------------------
-    // 1. GPT VALIDATES EACH ACTIVITY
+    // 1. GPT VALIDATES EACH HOURLY ACTION
     // -----------------------------------------
     for (let i = 0; i < routine.length; i++) {
-      const { hour, activity } = routine[i];
+      const { hour, action } = routine[i];
 
       const validationPrompt = `
 Your job is to check if an activity is something a human can DO.
@@ -40,8 +40,8 @@ Respond ONLY in JSON:
   "reason": "short explanation"
 }
 
-Activity: "${activity}"
-      `;
+Activity: "${action}"
+`;
 
       const validation = await openai.chat.completions.create({
         model: "gpt-4.1",
@@ -64,9 +64,9 @@ Activity: "${activity}"
       if (!result.doable) {
         return new Response(
           JSON.stringify({
-            error: `The activity at ${hour} — "${activity}" — is NOT something a human can do. ${result.reason}`,
+            error: `The activity at ${hour} — "${action}" — is NOT something a human can do. ${result.reason}`,
             invalidTime: hour,
-            invalidActivity: activity
+            invalidActivity: action
           }),
           { status: 400 }
         );
@@ -121,7 +121,7 @@ Return JSON ONLY:
 Wake time: ${wakeTime}
 Sleep time: ${sleepTime}
 Routine: ${JSON.stringify(routine, null, 2)}
-    `;
+`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4.1",
@@ -151,4 +151,3 @@ Routine: ${JSON.stringify(routine, null, 2)}
     );
   }
 }
-
