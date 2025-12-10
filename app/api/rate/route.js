@@ -9,7 +9,8 @@ export async function POST(req) {
     // 1. GPT VALIDATES EACH HOURLY ACTION
     // -----------------------------------------
     for (let i = 0; i < routine.length; i++) {
-      const { hour, action } = routine[i];
+      const { hour, activity } = routine[i];
+      const action = activity;
 
       const validationPrompt = `
 Your job is to check if an activity is something a human can DO.
