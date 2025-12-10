@@ -7,10 +7,9 @@ export default function TimeDropdown({ label, hour, setHour, meridiem, setMeridi
         </label>
 
         <div style={{ display: "flex", gap: "10px" }}>
-          {/* Hour dropdown */}
           <select
             value={hour}
-            onChange={(e) => setHour(e.target.value)}
+            onChange={(e) => setHour(Number(e.target.value))}
             style={{
               border: "1px solid #ccc",
               padding: "8px",
@@ -25,7 +24,6 @@ export default function TimeDropdown({ label, hour, setHour, meridiem, setMeridi
             ))}
           </select>
 
-          {/* AM / PM */}
           <select
             value={meridiem}
             onChange={(e) => setMeridiem(e.target.value)}
