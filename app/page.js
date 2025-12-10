@@ -16,6 +16,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [errorBox, setErrorBox] = useState(null);
 
+  // new: control visibility of the Rate button
+  const [showRate, setShowRate] = useState(false);
+
   const to24 = (hour, mer) => {
     let h = Number(hour);
     if (mer === "PM" && h !== 12) h += 12;
@@ -42,6 +45,9 @@ export default function Home() {
       result.push({ hour: display12(current), value: "" });
     }
     setHours(result);
+
+    // show the Rate button only after Generate Hours (personalize) is clicked
+    setShowRate(true);
   }
 
   async function handleRate() {
@@ -211,26 +217,28 @@ export default function Home() {
         )}
 
         {/* RATE BUTTON */}
-        <button
-          onClick={handleRate}
-          disabled={loading || hours.length === 0}
-          style={{
-            width: "100%",
-            padding: "14px",
-            fontSize: "16px",
-            fontWeight: "600",
-            background: loading || hours.length === 0 ? "gray" : "green",
-            color: "white",
-            borderRadius: "8px",
-            border: "none",
-            cursor:
-              loading || hours.length === 0 ? "not-allowed" : "pointer",
-            marginTop: "20px",
-            opacity: loading || hours.length === 0 ? 0.7 : 1,
-          }}
-        >
-          {loading ? "Rating..." : "Rate My Day"}
-        </button>
+        {showRate && (
+          <button
+            onClick={handleRate}
+            disabled={loading || hours.length === 0}
+            style={{
+              width: "100%",
+              padding: "14px",
+              fontSize: "16px",
+              fontWeight: "600",
+              background: loading || hours.length === 0 ? "gray" : "green",
+              color: "white",
+              borderRadius: "8px",
+              border: "none",
+              cursor:
+                loading || hours.length === 0 ? "not-allowed" : "pointer",
+              marginTop: "20px",
+              opacity: loading || hours.length === 0 ? 0.7 : 1,
+            }}
+          >
+            {loading ? "Rating..." : "Rate My Day"}
+          </button>
+        )}
       </div>
 
       {/* ABOUT SECTION */}
