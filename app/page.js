@@ -16,10 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [errorBox, setErrorBox] = useState(null);
 
-  // new: control visibility of the Rate button
   const [showRate, setShowRate] = useState(false);
-
-  // required for Learn More
   const [showMore, setShowMore] = useState(false);
 
   const to24 = (hour, mer) => {
@@ -128,7 +125,6 @@ export default function Home() {
           hour-by-hour insights powered by AI.
         </p>
 
-        {/* Wake + Sleep Inputs */}
         <div
           style={{
             display: "flex",
@@ -218,7 +214,6 @@ export default function Home() {
           </div>
         )}
 
-        {/* RATE BUTTON */}
         {showRate && (
           <button
             onClick={handleRate}
@@ -243,7 +238,17 @@ export default function Home() {
         )}
       </div>
 
-      {/* ABOUT SECTION (NEW EXPANDABLE VERSION) */}
+      {/* AD PLACEMENT #1 — ABOVE THE FOLD */}
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <script
+          async
+          data-cfasync="false"
+          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
+        ></script>
+        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
+      </div>
+
+      {/* ABOUT SECTION */}
       <div
         style={{
           background: "#fff",
@@ -327,6 +332,16 @@ export default function Home() {
         </ul>
       </div>
 
+      {/* AD PLACEMENT #2 — MID CONTENT */}
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <script
+          async
+          data-cfasync="false"
+          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
+        ></script>
+        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
+      </div>
+
       {/* FAQ SECTION */}
       <div
         style={{
@@ -364,6 +379,16 @@ export default function Home() {
             <p>You enter your day, AI scores it.</p>
           </div>
         </div>
+      </div>
+
+      {/* AD PLACEMENT #3 — FOOTER TOP */}
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <script
+          async
+          data-cfasync="false"
+          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
+        ></script>
+        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
       </div>
 
       <div
