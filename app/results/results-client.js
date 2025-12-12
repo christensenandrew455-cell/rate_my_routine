@@ -24,7 +24,6 @@ export default function ResultsClient() {
 
   if (!data) return <div style={{ padding: "40px" }}>Loading...</div>;
 
-  // --- WORD SCORE PICKER ---
   const getScoreWord = (score) => {
     if (score >= 0 && score < 10) return "how?";
     if (score >= 10 && score < 20) return "really";
@@ -36,13 +35,11 @@ export default function ResultsClient() {
     if (score >= 70 && score < 80) return "good";
     if (score >= 80 && score < 90) return "excellent";
     if (score >= 90 && score <= 100) return "amazing";
-
     return "unknown";
   };
 
   const scoreWord = getScoreWord(data.summaryScore);
 
-  // Remap GPT 0–20 ratings for graph (-10 → 10)
   const graphData =
     data?.graphData?.map((d) => ({
       x: d.x,
@@ -62,7 +59,7 @@ export default function ResultsClient() {
         {data.summaryScore}/100
       </div>
 
-      {/* Word Based on Score */}
+      {/* Score Word */}
       <div
         style={{
           fontSize: "32px",
@@ -72,6 +69,16 @@ export default function ResultsClient() {
         }}
       >
         {scoreWord}
+      </div>
+
+      {/* AD #1 – High CTR under score */}
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <script
+          async
+          data-cfasync="false"
+          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
+        ></script>
+        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
       </div>
 
       {/* Explanation */}
@@ -115,6 +122,16 @@ export default function ResultsClient() {
         </ResponsiveContainer>
       </div>
 
+      {/* AD #2 – Mid-page */}
+      <div style={{ textAlign: "center", margin: "20px 0" }}>
+        <script
+          async
+          data-cfasync="false"
+          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
+        ></script>
+        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
+      </div>
+
       {/* Best/Worst Hour */}
       <div
         style={{
@@ -145,6 +162,16 @@ export default function ResultsClient() {
           Suggestions for Improvement
         </h2>
         <p style={{ fontSize: "18px", color: "#222" }}>{data.suggestion}</p>
+      </div>
+
+      {/* AD #3 – Above CTA */}
+      <div style={{ textAlign: "center", margin: "25px 0" }}>
+        <script
+          async
+          data-cfasync="false"
+          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
+        ></script>
+        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
       </div>
 
       {/* Button */}
