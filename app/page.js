@@ -238,16 +238,6 @@ export default function Home() {
         )}
       </div>
 
-      {/* AD PLACEMENT #1 — ABOVE THE FOLD */}
-      <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <script
-          async
-          data-cfasync="false"
-          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
-        ></script>
-        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
-      </div>
-
       {/* ABOUT SECTION */}
       <div
         style={{
@@ -332,16 +322,6 @@ export default function Home() {
         </ul>
       </div>
 
-      {/* AD PLACEMENT #2 — MID CONTENT */}
-      <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <script
-          async
-          data-cfasync="false"
-          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
-        ></script>
-        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
-      </div>
-
       {/* FAQ SECTION */}
       <div
         style={{
@@ -379,16 +359,6 @@ export default function Home() {
             <p>You enter your day, AI scores it.</p>
           </div>
         </div>
-      </div>
-
-      {/* AD PLACEMENT #3 — FOOTER TOP */}
-      <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <script
-          async
-          data-cfasync="false"
-          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
-        ></script>
-        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
       </div>
 
       <div
