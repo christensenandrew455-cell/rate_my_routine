@@ -71,16 +71,6 @@ export default function ResultsClient() {
         {scoreWord}
       </div>
 
-      {/* AD #1 – High CTR under score */}
-      <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <script
-          async
-          data-cfasync="false"
-          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
-        ></script>
-        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
-      </div>
-
       {/* Explanation */}
       <p style={{ fontSize: "18px", marginBottom: "40px", color: "#444" }}>
         {data.explanation}
@@ -122,16 +112,6 @@ export default function ResultsClient() {
         </ResponsiveContainer>
       </div>
 
-      {/* AD #2 – Mid-page */}
-      <div style={{ textAlign: "center", margin: "20px 0" }}>
-        <script
-          async
-          data-cfasync="false"
-          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
-        ></script>
-        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
-      </div>
-
       {/* Best/Worst Hour */}
       <div
         style={{
@@ -162,16 +142,6 @@ export default function ResultsClient() {
           Suggestions for Improvement
         </h2>
         <p style={{ fontSize: "18px", color: "#222" }}>{data.suggestion}</p>
-      </div>
-
-      {/* AD #3 – Above CTA */}
-      <div style={{ textAlign: "center", margin: "25px 0" }}>
-        <script
-          async
-          data-cfasync="false"
-          src="https://pl28239900.effectivegatecpm.com/4e20b4df145884b421e51e790c1e1d08/invoke.js"
-        ></script>
-        <div id="container-4e20b4df145884b421e51e790c1e1d08"></div>
       </div>
 
       {/* Button */}
